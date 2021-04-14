@@ -28,6 +28,7 @@ class CartItem extends StatelessWidget {
         padding: EdgeInsets.only(right: 20),
         margin: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
       ),
+      confirmDismiss: (direction) => showAlertDialog(context, direction),
       onDismissed: (direction) {
         Provider.of<Cart>(context, listen: false).removeItem(productId);
       },
@@ -46,5 +47,23 @@ class CartItem extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<bool> showAlertDialog(BuildContext context, DismissDirection _) {
+    return showDialog(
+        context: context,
+        builder: (ctx) => AlertDialog(
+              title: Text("Are you sure?"),
+              content:
+                  Text("Do you really want to remove this item from the cart?"),
+              actions: [
+                TextButton(onPressed: () {
+                  Navigator.of(context).pop(false);
+                }, child: Text("NO")),
+                TextButton(onPressed: () {
+                  Navigator.of(context).pop(true);
+                }, child: Text("YES")),
+              ],
+            ));
   }
 }
