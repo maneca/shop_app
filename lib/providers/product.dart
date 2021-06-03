@@ -9,6 +9,7 @@ class Product with ChangeNotifier{
   bool isFavourite;
 
   Product({
+    this.id,
     @required this.name,
     @required this.description,
     @required this.price,
