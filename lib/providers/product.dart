@@ -15,9 +15,7 @@ class Product with ChangeNotifier{
     @required this.price,
     @required this.imageUrl,
     this.isFavourite = false
-  }){
-    this.id = DateTime.now().toString();
-  }
+  });
 
   void toggleFavourite(){
     isFavourite = !isFavourite;

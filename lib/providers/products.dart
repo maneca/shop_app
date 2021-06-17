@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app/api/Api.dart';
+import 'package:shop_app/api/api.dart';
+import 'package:shop_app/models/http_exception.dart';
 import 'product.dart';
 
 class Products with ChangeNotifier {
@@ -49,16 +50,19 @@ class Products with ChangeNotifier {
     return Future.value();
   }
 
-  void updateProduct(String id, Product updatedProduct) {
-    var index = _items.indexWhere((element) => element.id == id);
+  Future<void> updateProduct(Product updatedProduct) async{
+    var index = _items.indexWhere((element) => element.id == updatedProduct.id);
     if (index >= 0) {
+      await Api().updateProduct(updatedProduct);
       _items[index] = updatedProduct;
       notifyListeners();
     }
   }
 
-  void deleteProduct(String id) {
-    _items.removeWhere((product) => product.id == id);
-    notifyListeners();
+  Future<void> deleteProduct(String id) async{
+    await Api().deleteProduct(id).then((_) {
+        _items.removeWhere((product) => product.id == id);
+        notifyListeners();
+    });
   }
 }

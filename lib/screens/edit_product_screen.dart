@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/product.dart';
 import '../providers/products.dart';
+import '../models/error_dialog.dart';
 
 class EditProductScreen extends StatefulWidget {
   const EditProductScreen({Key key}) : super(key: key);
@@ -17,6 +18,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _imageUrlFocusNode = FocusNode();
   final _imageUrlController = TextEditingController();
   final _form = GlobalKey<FormState>();
+  final _errorDialog = ErrorDialog();
   var _isInit = true;
   var _editMode = false;
   var _isLoading = false;
@@ -71,33 +73,22 @@ class _EditProductScreenState extends State<EditProductScreen> {
           await Provider.of<Products>(context, listen: false)
               .addProduct(_product);
         }catch(error){
-          await showDialog(
-              context: context,
-              builder: (ctx) => AlertDialog(
-                title: Text("An error occurred"),
-                content: Text("Something went wrong"),
-                actions: [
-                  TextButton(onPressed: (){
-                    Navigator.of(ctx).pop();
-                  }, child: Text("Ok"))
-                ],
-              ));
-        }finally{
-          setState(() {
-            _isLoading = false;
-          });
-          Navigator.of(context).pop();
+          await _errorDialog.showCustomDialog(context, error.toString());
         }
       } else {
-        Provider.of<Products>(context, listen: false)
-            .updateProduct(_product.id, _product);
-        _popBack();
+        try{
+          await Provider.of<Products>(context, listen: false)
+              .updateProduct(_product);
+        }catch(error){
+          await _errorDialog.showCustomDialog(context, error.toString());
+        }
       }
+
+      setState(() {
+        _isLoading = false;
+      });
+      Navigator.of(context).pop();
     }
-  }
-
-  void _popBack() {
-
   }
 
   @override
