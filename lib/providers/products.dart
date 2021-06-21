@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:shop_app/api/api.dart';
-import 'package:shop_app/models/http_exception.dart';
 import 'product.dart';
 
 class Products with ChangeNotifier {
@@ -46,8 +45,6 @@ class Products with ChangeNotifier {
     product.id = productId;
     _items.add(product);
     notifyListeners();
-
-    return Future.value();
   }
 
   Future<void> updateProduct(Product updatedProduct) async{

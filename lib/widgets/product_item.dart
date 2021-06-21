@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../models/error_dialog.dart';
 import '../screens/product_detail_screen.dart';
 import '../providers/product.dart';
 import '../providers/cart.dart';
@@ -35,8 +36,12 @@ class ProductItem extends StatelessWidget {
               icon: Icon(
                   product.isFavourite ? Icons.favorite : Icons.favorite_border),
               color: Theme.of(context).accentColor,
-              onPressed: () {
-                product.toggleFavourite();
+              onPressed: () async{
+                try{
+                  await product.toggleFavourite();
+                }catch(error){
+                  await ErrorDialog().showCustomDialog(context, error.toString());
+                }
               },
             ),
           ),

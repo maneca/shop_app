@@ -25,7 +25,7 @@ class Cart with ChangeNotifier {
   void addItemToCart(String productId, double price, String name) {
 
     if(_cart.containsKey(productId)){
-      _cart[productId].quantity++;
+      _cart[productId]!.quantity++;
     }
     else{
       _cart.putIfAbsent(productId, () => CartItem(
@@ -42,7 +42,7 @@ class Cart with ChangeNotifier {
       return;
     }
 
-    if(_cart[productId].quantity > 1){
+    if(_cart[productId]!.quantity > 1){
       _cart.update(productId, (value) => new CartItem(id: value.id, name: value.name, quantity: value.quantity - 1, price: value.price));
     }else{
       _cart.remove(productId);

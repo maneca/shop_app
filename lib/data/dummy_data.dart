@@ -2,6 +2,7 @@ import '../providers/product.dart';
 
 final DUMMY_PRODUCTS = [
     Product(
+      id: "1",
       name: "Red Shirt",
       description: "A red shirt - it is pretty red!",
       price: 29.99,
@@ -9,6 +10,7 @@ final DUMMY_PRODUCTS = [
       "https://cdn.pixabay.com/photo/2016/10/02/22/17/red-t-shirt-1710578_1280.jpg"
     ),
     Product(
+      id: "2",
       name: 'Trousers',
       description: 'A nice pair of trousers.',
       price: 59.99,
@@ -16,6 +18,7 @@ final DUMMY_PRODUCTS = [
       'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Trousers%2C_dress_%28AM_1960.022-8%29.jpg/512px-Trousers%2C_dress_%28AM_1960.022-8%29.jpg',
     ),
     Product(
+      id: "3",
       name: 'Yellow Scarf',
       description: 'Warm and cozy - exactly what you need for the winter.',
       price: 19.99,
@@ -23,6 +26,7 @@ final DUMMY_PRODUCTS = [
       'https://live.staticflickr.com/4043/4438260868_cc79b3369d_z.jpg',
     ),
     Product(
+      id: "4",
       name: 'A Pan',
       description: 'Prepare any meal you want.',
       price: 49.99,

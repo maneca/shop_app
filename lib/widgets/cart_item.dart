@@ -49,8 +49,8 @@ class CartItem extends StatelessWidget {
     );
   }
 
-  Future<bool> showAlertDialog(BuildContext context, DismissDirection _) {
-    return showDialog(
+  Future<bool?> showAlertDialog(BuildContext context, DismissDirection _) {
+    return showDialog<bool>(
         context: context,
         builder: (ctx) => AlertDialog(
               title: Text("Are you sure?"),

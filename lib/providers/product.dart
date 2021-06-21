@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import '../api/api.dart';
 
 class Product with ChangeNotifier{
   String id;
@@ -9,16 +10,18 @@ class Product with ChangeNotifier{
   bool isFavourite;
 
   Product({
-    this.id,
-    @required this.name,
-    @required this.description,
-    @required this.price,
-    @required this.imageUrl,
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.price,
+    required this.imageUrl,
     this.isFavourite = false
   });
 
-  void toggleFavourite(){
+  Future<void> toggleFavourite() async{
     isFavourite = !isFavourite;
+    await Api().updateFavourite(id, isFavourite);
+
     notifyListeners();
   }
 }

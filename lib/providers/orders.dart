@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../models/cart_item.dart';
+import '../api/api.dart';
 
 class OrderItem {
   final String id;
@@ -9,10 +10,10 @@ class OrderItem {
   final DateTime dateTime;
 
   OrderItem({
-    @required this.id,
-    @required this.amount,
-    @required this.products,
-    @required this.dateTime,
+    required this.id,
+    required this.amount,
+    required this.products,
+    required this.dateTime,
   });
 }
 
@@ -23,12 +24,35 @@ class Orders with ChangeNotifier {
     return [..._orders];
   }
 
-  void addOrderItem(List<CartItem> products, double total) {
+  Future<void> addOrder(List<CartItem> products, double total) async {
+    final timestamp = DateTime.now();
+    var orderId = await Api().addOrder(products, total, timestamp);
     _orders.add(OrderItem(
-        id: DateTime.now().toString(),
-        amount: total,
-        products: products,
-        dateTime: DateTime.now()));
+        id: orderId, amount: total, products: products, dateTime: timestamp));
     notifyListeners();
+  }
+
+  Future<void> fetchOrders() async {
+    var ordersMap = await Api().fetchOrders();
+    _orders = [];
+
+    if (ordersMap != null) {
+      ordersMap.forEach((key, value) {
+        var orderItem = OrderItem(
+            id: key,
+            amount: value["amount"],
+            dateTime: DateTime.parse(value['dateTime']),
+            products: (value["products"] as List<dynamic>)
+                .map((item) => CartItem(
+                    id: item['id'],
+                    price: item['price'],
+                    name: item['name'],
+                    quantity: item['quantity']))
+                .toList());
+        _orders.add(orderItem);
+      });
+      _orders.reversed.toList();
+      notifyListeners();
+    }
   }
 }

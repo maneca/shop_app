@@ -7,8 +7,8 @@ class CartItem {
   final double price;
 
   CartItem(
-      {@required this.id,
-      @required this.name,
-      @required this.quantity,
-      @required this.price});
+      {required this.id,
+      required this.name,
+      required this.quantity,
+      required this.price});
 }

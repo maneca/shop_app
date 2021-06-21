@@ -5,7 +5,7 @@ import '../providers/products.dart';
 import '../models/error_dialog.dart';
 
 class EditProductScreen extends StatefulWidget {
-  const EditProductScreen({Key key}) : super(key: key);
+  const EditProductScreen({Key? key}) : super(key: key);
   static const routeName = "./edit-product";
 
   @override
@@ -23,7 +23,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   var _editMode = false;
   var _isLoading = false;
   Product _product =
-      new Product(description: "", imageUrl: "", name: "", price: 0.0);
+      new Product(id: "", description: "", imageUrl: "", name: "", price: 0.0);
 
   @override
   void initState() {
@@ -45,7 +45,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   @override
   void didChangeDependencies() {
     if (_isInit) {
-      final productId = ModalRoute.of(context).settings.arguments as String;
+      final productId = ModalRoute.of(context)!.settings.arguments as String;
       _isInit = false;
       if (productId != null) {
         _editMode = true;
@@ -63,11 +63,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
   }
 
   Future<void> _saveForm() async{
-    if (_form.currentState.validate()) {
+    if (_form.currentState!.validate()) {
       setState(() {
         _isLoading = true;
       });
-      _form.currentState.save();
+      _form.currentState!.save();
       if (!_editMode) {
         try{
           await Provider.of<Products>(context, listen: false)
@@ -119,14 +119,14 @@ class _EditProductScreenState extends State<EditProductScreen> {
                           FocusScope.of(context).requestFocus(_priceFocusNode);
                         },
                         validator: (value) {
-                          if (value.isEmpty) {
+                          if (value!.isEmpty) {
                             return "Please insert a value";
                           }
 
                           return null;
                         },
                         onSaved: (value) {
-                          _product.name = value;
+                          _product.name = value!;
                         },
                       ),
                       TextFormField(
@@ -140,7 +140,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                               .requestFocus(_descriptionFocusNode);
                         },
                         validator: (value) {
-                          if (value.isEmpty) {
+                          if (value!.isEmpty) {
                             return "Please insert a price";
                           }
 
@@ -154,7 +154,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                           return null;
                         },
                         onSaved: (value) {
-                          _product.price = double.parse(value);
+                          _product.price = double.parse(value!);
                         },
                       ),
                       TextFormField(
@@ -164,13 +164,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         maxLines: 3,
                         focusNode: _descriptionFocusNode,
                         validator: (value) {
-                          if (value.isEmpty)
+                          if (value!.isEmpty)
                             return "Please insert a description";
 
                           return null;
                         },
                         onSaved: (value) {
-                          _product.description = value;
+                          _product.description = value!;
                         },
                       ),
                       Row(
@@ -203,10 +203,10 @@ class _EditProductScreenState extends State<EditProductScreen> {
                                 setState(() {});
                               },
                               onSaved: (value) {
-                                _product.imageUrl = value;
+                                _product.imageUrl = value!;
                               },
                               validator: (value) {
-                                if (value.isEmpty)
+                                if (value!.isEmpty)
                                   return "Please insert an image URL";
 
                                 return null;

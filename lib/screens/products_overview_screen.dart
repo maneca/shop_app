@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/error_dialog.dart';
 import '../screens/cart_screen.dart';
 import '../widgets/app_drawer.dart';
 import '../widgets/products_grid.dart';
@@ -18,8 +17,7 @@ class ProductsOverviewScreen extends StatefulWidget {
 
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   var _showOnlyFavourites = false;
-  var _isLoading = false;
-  var _isInit = true;
+  Future? _productsFuture;
 
   /*@override
   void didChangeDependencies() {
@@ -35,16 +33,14 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
     super.didChangeDependencies();
   }*/
 
+  Future _obtainProductsFuture() async{
+    return await Provider.of<Products>(context, listen: false).fetchProducts();
+  }
+
+
   @override
   void initState() {
-    setState(() {
-      _isLoading = true;
-    });
-    Provider.of<Products>(context, listen: false).fetchProducts().then((_) {
-      setState(() {
-        _isLoading = false;
-      });
-    });
+    _productsFuture = _obtainProductsFuture();
     super.initState();
   }
 
@@ -77,8 +73,8 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
                   ]),
           Consumer<Cart>(
             builder: (_, cart, ch) => Badge(
-              child: ch,
-              value: cart.itemCount.toString(),
+              child: ch!,
+              value: cart.itemCount.toString()
             ),
             child: IconButton(
               icon: Icon(Icons.shopping_cart),
@@ -90,11 +86,19 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
         ],
       ),
       drawer: AppDrawer(),
-      body: _isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : ProductsGrid(_showOnlyFavourites),
+      body: FutureBuilder(future: Provider.of<Products>(context, listen: false).fetchProducts(),
+        builder: (ctx, dataSnapshot) {
+          if(dataSnapshot.connectionState == ConnectionState.waiting){
+            return Center(child: CircularProgressIndicator(),);
+          }else {
+            if(dataSnapshot.error != null){
+              return Center(child: Text("Somthing went wrong getting the products"),);
+            }else {
+              return ProductsGrid(_showOnlyFavourites);
+            }
+          }
+        } ,
+      )
     );
   }
 }
