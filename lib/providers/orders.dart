@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 import '../models/cart_item.dart';
-import '../api/api.dart';
+import '../api/orders_api.dart';
 
 class OrderItem {
   final String id;
@@ -26,14 +26,14 @@ class Orders with ChangeNotifier {
 
   Future<void> addOrder(List<CartItem> products, double total) async {
     final timestamp = DateTime.now();
-    var orderId = await Api().addOrder(products, total, timestamp);
+    var orderId = await OrdersApi().addOrder(products, total, timestamp);
     _orders.add(OrderItem(
         id: orderId, amount: total, products: products, dateTime: timestamp));
     notifyListeners();
   }
 
   Future<void> fetchOrders() async {
-    var ordersMap = await Api().fetchOrders();
+    var ordersMap = await OrdersApi().fetchOrders();
     _orders = [];
 
     if (ordersMap != null) {

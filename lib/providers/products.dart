@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:shop_app/api/api.dart';
+import 'package:shop_app/api/products_api.dart';
 import 'product.dart';
 
 class Products with ChangeNotifier {
@@ -21,7 +21,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchProducts() async {
-    var productsMap = await Api().fetchProducts();
+    var productsMap = await ProductsApi().fetchProducts();
     _items = [];
 
     if(productsMap != null){
@@ -40,7 +40,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    var productId = await Api().addProduct(product);
+    var productId = await ProductsApi().addProduct(product);
 
     product.id = productId;
     _items.add(product);
@@ -50,14 +50,14 @@ class Products with ChangeNotifier {
   Future<void> updateProduct(Product updatedProduct) async{
     var index = _items.indexWhere((element) => element.id == updatedProduct.id);
     if (index >= 0) {
-      await Api().updateProduct(updatedProduct);
+      await ProductsApi().updateProduct(updatedProduct);
       _items[index] = updatedProduct;
       notifyListeners();
     }
   }
 
   Future<void> deleteProduct(String id) async{
-    await Api().deleteProduct(id).then((_) {
+    await ProductsApi().deleteProduct(id).then((_) {
         _items.removeWhere((product) => product.id == id);
         notifyListeners();
     });
