@@ -19,21 +19,27 @@ class OrderItem {
 
 class Orders with ChangeNotifier {
   List<OrderItem> _orders = [];
+  final String? authToken;
+  late OrdersApi _ordersApi;
 
   List<OrderItem> get orders {
     return [..._orders];
   }
 
+  Orders(this.authToken, this._orders){
+    _ordersApi = OrdersApi();
+  }
+
   Future<void> addOrder(List<CartItem> products, double total) async {
     final timestamp = DateTime.now();
-    var orderId = await OrdersApi().addOrder(products, total, timestamp);
+    var orderId = await _ordersApi.addOrder(products, total, timestamp, authToken);
     _orders.add(OrderItem(
         id: orderId, amount: total, products: products, dateTime: timestamp));
     notifyListeners();
   }
 
   Future<void> fetchOrders() async {
-    var ordersMap = await OrdersApi().fetchOrders();
+    var ordersMap = await _ordersApi.fetchOrders(authToken);
     _orders = [];
 
     if (ordersMap != null) {

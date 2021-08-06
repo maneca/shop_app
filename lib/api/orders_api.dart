@@ -6,9 +6,9 @@ import '../models/http_exception.dart';
 class OrdersApi{
   final String _baseUrl = "flutter-shop-app-e163c-default-rtdb.europe-west1.firebasedatabase.app";
 
-  Future<String> addOrder(List<CartItem> products, double total, DateTime timestamp) async{
+  Future<String> addOrder(List<CartItem> products, double total, DateTime timestamp, String? authToken) async{
     try{
-      final url = Uri.https(_baseUrl,"/orders.json");
+      final url = Uri.https(_baseUrl,"/orders.json", {"auth" : "$authToken" });
       var response = await http.post(url, body: json.encode({
         "amount": total,
         "products": products.map((prod) => {
@@ -25,9 +25,9 @@ class OrdersApi{
     }
   }
 
-  Future<Map<String, dynamic>> fetchOrders() async{
+  Future<Map<String, dynamic>> fetchOrders(String? authToken) async{
     try{
-      final url = Uri.https(_baseUrl,"/orders.json");
+      final url = Uri.https(_baseUrl,"/orders.json", {"auth" : "$authToken" });
       var response = await http.get(url);
       return json.decode(response.body) as Map<String, dynamic>;
     }catch(error){

@@ -8,7 +8,7 @@ class AuthApi {
 
   Future<Tuple<String, DateTime, String>> _authenticate(String? email, String? password, String type) async {
     final url = Uri.parse(
-        'https://www.googleapis.com/identitytoolkit/v3/relyingparty/$type?key=AIzaSyBWEpBZxsXGGAAv8UrlvA2bvgIOkbF-Y8M');
+        'https://identitytoolkit.googleapis.com/v1/accounts:$type?key=AIzaSyBWEpBZxsXGGAAv8UrlvA2bvgIOkbF-Y8M');
 
     try{
       var response = await http.post(url, body: json.encode({
@@ -34,10 +34,10 @@ class AuthApi {
   }
 
   Future<Tuple<String, DateTime, String>> signUp(String? email, String? password) async {
-    return _authenticate(email, password, "signupNewUser");
+    return _authenticate(email, password, "signUp");
   }
 
   Future<Tuple<String, DateTime, String>> login(String? email, String? password) async {
-    return _authenticate(email, password, "verifyPassword");
+    return _authenticate(email, password, "signInWithPassword");
   }
 }

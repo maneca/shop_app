@@ -4,12 +4,14 @@ import '../models/error_dialog.dart';
 import '../screens/product_detail_screen.dart';
 import '../providers/product.dart';
 import '../providers/cart.dart';
+import '../providers/auth.dart';
 
 class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final product = Provider.of<Product>(context, listen: false);
-    final cart = Provider.of<Cart>(context);
+    final cart = Provider.of<Cart>(context, listen: false);
+    final auth = Provider.of<Auth>(context, listen: false);
 
     // listen is set to false because we don't need for the whole widget to rebuild
     // when only the isFavourite property changes
@@ -38,7 +40,7 @@ class ProductItem extends StatelessWidget {
               color: Theme.of(context).accentColor,
               onPressed: () async{
                 try{
-                  await product.toggleFavourite();
+                  await product.toggleFavourite(auth.userId, auth.token);
                 }catch(error){
                   await ErrorDialog().showCustomDialog(context, error.toString());
                 }

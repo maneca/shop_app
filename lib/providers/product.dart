@@ -15,12 +15,12 @@ class Product with ChangeNotifier{
     required this.description,
     required this.price,
     required this.imageUrl,
-    this.isFavourite = false
+    this.isFavourite = false,
   });
 
-  Future<void> toggleFavourite() async{
+  Future<void> toggleFavourite(String userId, String? authToken) async{
     isFavourite = !isFavourite;
-    await ProductsApi().updateFavourite(id, isFavourite);
+    await ProductsApi().updateFavourite(id, isFavourite, userId, authToken);
 
     notifyListeners();
   }
