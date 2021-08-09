@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/tuple.dart';
 import '../models/http_exception.dart';
@@ -26,6 +27,10 @@ class AuthApi {
       var _token = responseData['idToken'];
       var _userId = responseData['localId'];
       var _expireDate = DateTime.now().add(Duration(seconds: int.parse(responseData['expiresIn'])));
+
+      final prefs = await SharedPreferences.getInstance();
+      final userData = json.encode({'token': _token, "userId": _userId, 'expireDate': _expireDate.toIso8601String()});
+      prefs.setString('userData', userData);
 
       return Tuple(item1: _token, item2: _expireDate, item3: _userId);
     }catch (error){
