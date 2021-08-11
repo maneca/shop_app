@@ -8,7 +8,8 @@ class ProductDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String productId = ModalRoute.of(context)!.settings.arguments as String;
+    final String productId =
+        ModalRoute.of(context)!.settings.arguments as String;
     final Product loadedProduct = Provider.of<Products>(context,
             listen:
                 false // when it is false, the widget does not get rebuilt whenever a new product is added to the product list
@@ -17,41 +18,52 @@ class ProductDetailScreen extends StatelessWidget {
         .findProductById(productId);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(loadedProduct.name),
-      ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Container(
-              height: 300,
-              width: double.infinity,
+      body: CustomScrollView(slivers: [
+        SliverAppBar(
+          expandedHeight: 300,
+          pinned: true,
+          flexibleSpace: FlexibleSpaceBar(
+            title: Container(
+                child: Text(
+                  loadedProduct.name,
+                  textAlign: TextAlign.start,
+                ),
+                width: double.infinity,
+                height: 30,
+                color: Theme.of(context).primaryColor),
+            background: Hero(
+              tag: loadedProduct.id,
               child: Image.network(
                 loadedProduct.imageUrl,
                 fit: BoxFit.cover,
               ),
             ),
-            SizedBox(
-              height: 10,
-            ),
-            Text(
-              "\$${loadedProduct.price}",
-              style: TextStyle(color: Colors.grey, fontSize: 20),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Text(
-                "${loadedProduct.description}",
-                textAlign: TextAlign.center,
-                softWrap: true,
-              ),
-            )
-          ],
+          ),
         ),
-      ),
+        SliverList(
+            delegate: SliverChildListDelegate([
+          SizedBox(
+            height: 10,
+          ),
+          Text(
+            "\$${loadedProduct.price}",
+            style: TextStyle(color: Colors.grey, fontSize: 20),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Text(
+              "${loadedProduct.description}",
+              textAlign: TextAlign.center,
+              softWrap: true,
+            ),
+          ),
+              SizedBox(height: 800,)
+        ]))
+      ]),
     );
   }
 }
